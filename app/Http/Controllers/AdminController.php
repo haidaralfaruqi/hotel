@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Admins;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Pembelians;
 use App\Models\User;
+use App\Models\Hotel;
 
 
 class AdminController extends Controller
@@ -16,7 +17,14 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view ("admin.dashboard");
+        $newUsersCount = User::count(); // Mengambil jumlah pengguna dari tabel pengguna
+        $totalOrdersCount = Pembelians::count(); // Mengambil jumlah total pembelian dari tabel pembelian
+        $registeredHotelsCount = Hotel::count(); // Mengambil jumlah hotel terdaftar dari tabel hotels
+        return view('admin.dashboard', [
+            'newUsersCount' => $newUsersCount,
+            'totalOrdersCount' => $totalOrdersCount,
+            'registeredHotelsCount' => $registeredHotelsCount
+        ]); // Mengirimkan data ke view
     }
 
     public function showUsers()

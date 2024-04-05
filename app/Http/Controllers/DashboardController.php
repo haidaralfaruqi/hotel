@@ -13,19 +13,11 @@ class DashboardController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        // Mendapatkan objek pengguna yang saat ini diautentikasi
-        $user = Auth::user();
+{
+    $hotels = Hotel::all(); // Mengambil semua data hotel dari database
 
-        // Memeriksa apakah pengguna adalah admin menggunakan metode isAdmin()
-        if ($user && $user->isAdmin()) {
-            // Redirect admin to admin dashboard
-            return redirect()->route('admin.dashboard');
-        }
-
-        // Redirect regular users to their dashboard
-        return view('user.dashboard');
-    }
+    return view('dashboard', ['hotels' => $hotels]);
+}
 
     /**
      * Show the form for creating a new resource.
