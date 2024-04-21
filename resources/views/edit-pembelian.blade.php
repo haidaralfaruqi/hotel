@@ -83,6 +83,9 @@
                 document.getElementById('total_price').value = totalPrice;
             }
         }
+
+        document.getElementById('checkin_date').addEventListener('change', calculateTotalPrice);
+                    document.getElementById('checkout_date').addEventListener('change', calculateTotalPrice);
     </script>
 
 </x-app-layout>

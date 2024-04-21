@@ -15,7 +15,7 @@
                             <h3 class="text-lg font-semibold mb-4">Informasi Pembelian:</h3>
                             <div class="mb-4">
                                 <label for="hotel" class="block inline-block">Nama Hotel:</label>
-                                <select id="hotel" name="hotel" class="form-select w-full">
+                                <select id="hotel" name="hotel" class="form-select w-full" onchange="getHotelPrice()">
                                     <option value="">Pilih Hotel</option>
                                     @foreach($hotels as $hotel)
                                     <option value="{{ $hotel->id }}" data-price="{{ $hotel->price }}">{{ $hotel->name }}</option>
@@ -24,18 +24,18 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="price" class="block inline-block">Harga Hotel:</label>
-                                <input type="text" id="price" name="price" class="form-input w-full" readonly>
+                                <label for="hotel_price" class="block inline-block">Harga Hotel:</label>
+                                <input type="text" id="hotel_price" name="hotel_price" class="form-input w-full" readonly>
                             </div>
 
                             <div class="mb-4">
                                 <label for="checkin_date" class="block inline-block">Tanggal Check-in:</label>
-                                <input type="date" id="checkin_date" name="checkin_date" class="form-input w-full">
+                                <input type="date" id="checkin_date" name="checkin_date" class="form-input w-full" onchange="calculateTotalPrice()">
                             </div>
 
                             <div class="mb-4">
                                 <label for="checkout_date" class="block inline-block">Tanggal Check-out:</label>
-                                <input type="date" id="checkout_date" name="checkout_date" class="form-input w-full">
+                                <input type="date" id="checkout_date" name="checkout_date" class="form-input w-full" onchange="calculateTotalPrice()">
                             </div>
 
                             <div class="mb-4">
@@ -62,32 +62,27 @@
     </div>
 
     <script>
-    document.getElementById('hotel').addEventListener('change', function() {
-        var selectedHotel = this.options[this.selectedIndex];
-        var price = parseFloat(selectedHotel.getAttribute('data-price'));
-        document.getElementById('price').value = price;
-        updateTotalPrice();
-    });
+        function getHotelPrice() {
+            var hotelId = document.getElementById('hotel').value;
+            var hotelPrice = document.querySelector('option[value="' + hotelId + '"]').getAttribute('data-price');
+            document.getElementById('hotel_price').value = hotelPrice;
+            calculateTotalPrice(); // Memanggil fungsi calculateTotalPrice() setelah memperbarui harga hotel
+        }
 
-    document.getElementById('checkin_date').addEventListener('change', updateTotalPrice);
-    document.getElementById('checkout_date').addEventListener('change', updateTotalPrice);
+        function calculateTotalPrice() {
+            var checkinDate = new Date(document.getElementById('checkin_date').value);
+            var checkoutDate = new Date(document.getElementById('checkout_date').value);
+            var hotelPricePerNight = parseFloat(document.getElementById('hotel_price').value);
 
-    function updateTotalPrice() {
-        var price = parseFloat(document.getElementById('price').value);
-        var checkinDate = new Date(document.getElementById('checkin_date').value);
-        var checkoutDate = new Date(document.getElementById('checkout_date').value);
-        
-        // Menghitung selisih waktu dalam milidetik
-        var differenceInMilliseconds = checkoutDate - checkinDate;
-        // Mengonversi milidetik menjadi jam dan membulatkannya ke atas
-        var differenceInHours = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60));
-        
-        // Menghitung total harga berdasarkan harga hotel dan jumlah jam
-        var totalPrice = price * differenceInHours / 24;
+            if (!isNaN(checkinDate.getTime()) && !isNaN(checkoutDate.getTime())) {
+                var timeDiff = Math.abs(checkoutDate.getTime() - checkinDate.getTime());
+                var nightCount = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Calculate number of nights
+                var totalPrice = nightCount * hotelPricePerNight;
+                document.getElementById('total_price').value = totalPrice.toFixed(2);
+            }
+        }
 
-        document.getElementById('total_price').value = totalPrice.toFixed(2);
-    }
-</script>
-
-
+        document.getElementById('checkin_date').addEventListener('change', calculateTotalPrice);
+        document.getElementById('checkout_date').addEventListener('change', calculateTotalPrice);
+    </script>
 </x-app-layout>

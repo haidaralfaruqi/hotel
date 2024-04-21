@@ -60,17 +60,19 @@
                                 <td>
                                     <a href="{{ route('admin.pesanan.edit', $pembelian->id) }}" class="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:shadow-outline-blue active:bg-blue-600 transition duration-150 ease-in-out">Edit</a>
 
-                                    <form id="deleteForm{{ $index }}" action="{{ route('admin.pesanan.destroy', $pembelian->id) }}" method="POST" class="inline">
+                                    <form id="deleteForm{{ $pembelian->id }}" action="{{ route('admin.pesanan.destroy', $pembelian->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" onclick="confirmDelete('{{ $index }}')" class="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">Delete</button>
+                                        <button type="button" onclick="confirmDelete('{{ $pembelian->id }}')" data-pembelian-id="{{ $pembelian->id }}" class="ml-2 px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus:shadow-outline-red active:bg-red-600 transition duration-150 ease-in-out">Delete</button>
                                     </form>
+
+
                                 </td>
 
                                 <script>
-                                    function confirmDelete(index) {
+                                   function confirmDelete(pembelianId) {
                                         if (confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) {
-                                            document.getElementById('deleteForm{{ $index }}').submit();
+                                            document.getElementById('deleteForm' + pembelianId).submit();
                                         }
                                     }
                                 </script>

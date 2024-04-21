@@ -46,7 +46,7 @@ class PembelianController extends Controller
             $pembelian->save();
 
             // Redirect ke halaman dashboard dengan pesan sukses
-            return redirect()->route('dashboard')->with('success', 'Pembelian berhasil diproses!');
+            return redirect()->route('riwayat')->with('success', 'Pembelian berhasil diproses!');
         } catch (\Exception $e) {
             // Redirect kembali ke halaman pembelian dengan pesan error jika terjadi kesalahan
             return redirect()->route('pembelian')->with('error', 'Terjadi kesalahan saat memproses pembelian.');
